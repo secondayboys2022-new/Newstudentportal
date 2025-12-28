@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load the excel file
-df = pd.read_excel("students.xlsx")
+df = pd.read_excel("new file.xlsx")
 
 st.title("Student Information Portal")
 
@@ -21,4 +21,5 @@ if search_id:
         st.write(f"**Email:** {result.iloc[0]['Email']}")
         st.write(f"**Password:** {result.iloc[0]['Password']}")
     else:
+
         st.error("No student found with that ID.")
