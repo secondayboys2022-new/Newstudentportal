@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+import os
+
 # Page setup
 st.set_page_config(page_title="Student Data Finder", layout="centered")
 
@@ -13,10 +15,29 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+
+
 @st.cache_data
 def load_data():
-    # Load the excel file
-    return pd.read_excel("students.xlsx")
+    # 1. List all files in the current folder
+    all_files = os.listdir(".")
+    
+    # 2. Find any file that ends with .xlsx
+    excel_files = [f for f in all_files if f.endswith(".xlsx")]
+    
+    if not excel_files:
+        st.error("❌ No Excel (.xlsx) file was found in your GitHub folder.")
+        st.info(f"Files currently in your folder: {all_files}")
+        st.stop()
+    
+    # 3. Pick the first excel file found
+    target_file = excel_files[0]
+    st.sidebar.success(f"Connected to: {target_file}")
+    
+    return pd.read_excel(target_file)
+
+# Call the function
+df = load_data()
 
 st.title("🔍 Student Record Search")
 st.write("Enter a National ID below to view student details.")
@@ -56,3 +77,4 @@ with st.container():
                 st.error("No student found with that National ID.")
         except Exception as e:
             st.error(f"Please ensure 'students.xlsx' is uploaded. Error: {e}")
+
